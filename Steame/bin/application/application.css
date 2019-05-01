@@ -1,0 +1,48 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+.jfx-button {
+     -jfx-button-type: RAISED;
+     -fx-background-color: #9E723B;
+     -fx-text-fill: white;
+}
+.A {
+     -jfx-button-type: RAISED;
+     -fx-background-color: #8D97A1;
+     -fx-text-fill: white;
+}
+.label{
+	-fx-text-fill: #8D97A1;
+}
+.root{
+	-fx-background-color: #2D3B3D;
+}
+.jfx-text-area{
+	-jfx-focus-color: #8D97A1;
+	-jfx-unfocus-color: #8D97A1;
+	-fx-text-fill: #F1F2F0;
+}
+.jfx-password-field{
+	-jfx-focus-color: #8D97A1;
+	-jfx-unfocus-color: #8D97A1;
+	-fx-text-fill: #F1F2F0;
+}
+
+.jfx-slider > .track {
+     -fx-background-color: #F1F2F0;
+}
+.jfx-slider > .colored-track {
+     -fx-background-color: green;
+}
+.jfx-slider > .thumb {
+     -fx-background-color: green;
+}
+.jfx-slider > .animated-thumb {
+     -fx-background-color: green;
+}
+/* Styling the slider value text inside animated thumb */
+.jfx-slider .slider-value {
+     -fx-fill: #F1F2F0;
+     -fx-stroke: #F1F2F0;
+}
+.jfx-check-box {
+     -fx-text-fill: #8D97A1;
+}
