@@ -2,6 +2,9 @@ package application;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
@@ -17,7 +20,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class Login {
-	public Login(Stage stage) throws FileNotFoundException
+	public Login(Stage stage, Statement st) throws FileNotFoundException
 	{
 		GridPane main = new GridPane();
 		main.getStylesheets().add("application/application.css");
@@ -51,7 +54,7 @@ public class Login {
 
 			@Override
 			public void handle(ActionEvent event) {
-				new NewAcc(stage,2);
+				new NewAcc(stage,st,2,0);
 				return;
 				
 			}
@@ -61,7 +64,35 @@ public class Login {
 
 			@Override
 			public void handle(ActionEvent event) {
-				new Library(stage);
+				
+				String n = username.getText();
+				String s = password.getText();
+				
+				try {
+					ResultSet rs = st.executeQuery("SELECT * FROM User WHERE ScreenName='"+n+"'");
+					
+					while(rs.next())
+					{
+						String pass = rs.getString("Password");
+						int UserID = rs.getInt("UserId");
+						
+						if(!pass.isEmpty()&& pass.equals(s))
+						{
+							new Library(stage,st,UserID);
+						}
+						else
+						{
+							
+						}
+					}
+				
+					
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
 				return;
 				
 			}

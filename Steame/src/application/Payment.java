@@ -1,5 +1,7 @@
 package application;
 
+import java.sql.Statement;
+
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextArea;
@@ -12,7 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class Payment {
-	public Payment(Stage stage) {
+	public Payment(Stage stage, Statement st, int UserID) {
 		GridPane main = new GridPane();
 		main.getStylesheets().add("application/application.css");
 	    main.setVgap(20);
@@ -65,7 +67,7 @@ public class Payment {
 
 			@Override
 			public void handle(ActionEvent event) {
-				new Library(stage);
+				new Library(stage,st, UserID);
 				return;
 				
 			}

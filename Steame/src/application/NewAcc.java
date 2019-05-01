@@ -1,6 +1,8 @@
 package application;
 
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
@@ -17,7 +19,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class NewAcc {
-	public NewAcc(Stage stage, int x)
+	public NewAcc(Stage stage, Statement st, int x, int UserID)
 	{
 		GridPane main = new GridPane();
 		main.getStylesheets().add("application/application.css");
@@ -57,6 +59,7 @@ public class NewAcc {
         */
         
         Label phoneN = new Label("Phone #");
+       
         main.add(phoneN, 7, 3);
         
         JFXSlider phone = new JFXSlider();
@@ -95,11 +98,11 @@ public class NewAcc {
 			@Override
 			public void handle(ActionEvent event) {
 				if(x==1) {
-					new Library(stage);
+					new Library(stage, st, UserID);
 				}
 				else if(x==2) {
 					try {
-						new Login(stage);
+						new Login(stage, st);
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -114,7 +117,24 @@ public class NewAcc {
 
 			@Override
 			public void handle(ActionEvent event) {
-				new Library(stage);
+				
+				int UserID = (int)(Math.random()*Integer.MAX_VALUE);
+				String sn = scname.getText();
+				String rn = realname.getText();
+				String em = email.getText();
+				int pn = (int)phone.getValue();
+				String pw = password.getText();
+				boolean cf = isCus.isSelected();
+				boolean df = isDev.isSelected();
+				
+				try {
+					st.execute("INSERT INTO User (UserID,ScreenName,	RealName,	Email	,PhoneNumber,	Password	,Customer_Flag	,Developer_Flag	,DeveloperPage) "
+							+ "VALUES ("+UserID+", '"+sn+"', '"+rn+"', '"+em+"', "+pn+", '"+em+"', "+cf+", "+df+", 'dd.com')");
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				new Library(stage,st,UserID);
 				return;
 				
 			}

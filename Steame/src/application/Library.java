@@ -1,6 +1,11 @@
 package application;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
@@ -31,7 +36,7 @@ public class Library {
 
     private Image[] listOfImages = {IMAGE_RUBY, IMAGE_APPLE, IMAGE_VISTA, IMAGE_TWITTER};
 
-	public Library(Stage stage)
+	public Library(Stage stage, Statement st, int UserID)
 	{
 		JFXListView<Label> list = new JFXListView<>();
         for (int i = 0; i < 4; i++) {
@@ -44,35 +49,78 @@ public class Library {
          listView.setPrefHeight(600);
         listView.setPrefWidth(300);
          
-       
-         for (int i = 0; i < 30; i++) {
-        	 listView.getItems().add("s");
-         }
-         
-         
         
-         listView.setCellFactory(param -> new ListCell<String>() {
-             private ImageView imageView = new ImageView();
-             @Override
-             public void updateItem(String name, boolean empty) {
-                 super.updateItem(name, empty);
-                 if (empty) {
-                     setText(null);
-                     setGraphic(null);
-                 } else {
-                     if(name.equals("s"))
-                         imageView.setImage(listOfImages[0]);
-                     setText(name);
-                     setGraphic(imageView);
-                 }
-             }
-         });
+        ArrayList<String> games = new ArrayList<String>();
+        
+        try {
+			ResultSet rs = st.executeQuery("SELECT * FROM (User JOIN (PlaysGame JOIN Game ON PlaysGame.GameID_FK = Game.GameID) ON PlaysGame.UserID_FK = User.UserID) WHERE UserID="+UserID);
+			
+			while(rs.next())
+			{
+				games.add(rs.getString("Name"));
+				
+			}
+		
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+      
+        
+       
+        for (int i = 0; i < games.size(); i++) {
+          	 listView.getItems().add(games.get(i));
+           }
+           
+           listView.setCellFactory(param -> new ListCell<String>() {
+               private ImageView imageView = new ImageView();
+               @Override
+               public void updateItem(String name, boolean empty) {
+                   super.updateItem(name, empty);
+                   
+                   if (empty) {
+                       setText(null);
+                       setGraphic(null);
+                   } else {
+                   	Image m = null;
+                  	try {
+                  		String loc = "Games/"+name+"/"+name+".jpg";
+                  	//	System.out.println(loc);
+                        m = new Image(loc);
+                        
+                  	}catch (Exception e) {
+   					e.printStackTrace();
+   				}
+                       
+                       imageView.setImage(m);
+                       imageView.setFitHeight(100);
+                       imageView.setFitWidth(100);
+                       imageView.setPreserveRatio(true);
+                       setText(name);
+                       setGraphic(imageView);
+                   }
+               }
+           });
          
          listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
             @Override
             public void handle(MouseEvent event) {
-                System.out.println("clicked on " + listView.getSelectionModel().getSelectedItem());
+            	System.out.println(listView.getSelectionModel().getSelectedItem());
+            	
+            	if(listView.getSelectionModel().getSelectedItem().toString().equals("OSU!"))
+            	{
+            		
+            		try {
+						Runtime.getRuntime().exec("C:/Users/Ari/eclipse-workspace/Steame/src/Games/OSU!/osu!.exe");
+						
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+            	}
             }
         });
 
@@ -85,15 +133,15 @@ public class Library {
         
         JFXButton store = new JFXButton("Store");
         store.getStyleClass().add("A");
-        main.add(store, 4, 0);
+        main.add(store, 7, 0);
         
         JFXButton account = new JFXButton("Account");
         account.getStyleClass().add("A");
-        main.add(account, 7, 0);
+        main.add(account, 10, 0);
         
-        JFXButton payment = new JFXButton("Pay Info");
-        payment.getStyleClass().add("A");
-        main.add(payment, 10, 0);
+     //   JFXButton payment = new JFXButton("Pay Info");
+   //     payment.getStyleClass().add("A");
+     //   main.add(payment, 10, 0);
         
         
         JFXButton logout = new JFXButton("Log out");
@@ -106,7 +154,7 @@ public class Library {
 
 			@Override
 			public void handle(ActionEvent event) {
-				new NewAcc(stage,1);
+				new NewAcc(stage,st,1, UserID);
 				return;
 				
 			}
@@ -117,7 +165,7 @@ public class Library {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					new Login(stage);
+					new Login(stage,st);
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -127,21 +175,21 @@ public class Library {
 			}
 		});
         
-        payment.setOnAction(new EventHandler<ActionEvent>() {
+      /*  payment.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
-				new Payment(stage);
+				new Payment(stage,st, UserID);
 				return;
 				
 			}
-		});
+		});*/
         
         store.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
-				new Store(stage);
+				new Store(stage, st, UserID);
 				return;
 				
 			}
